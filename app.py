@@ -53,7 +53,7 @@ async def get_context(
     # res = openai_client.embeddings.create(
     #     input=[query_data.query], model="text-embedding-ada-002"
     # )
-    res = openai.Embedding.create(
+    res = openai_client.Embedding.create(
         input=[query_data.query],
         engine=embed_model
     )
