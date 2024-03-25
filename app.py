@@ -48,13 +48,20 @@ async def get_context(
     query_data: QueryModel,
     credentials: HTTPAuthorizationCredentials = Depends(validate_token),
 ):
+    embed_model = "text-embedding-ada-002"
     # convert query to embeddings
-    res = openai_client.embeddings.create(
-        input=[query_data.query], model="text-embedding-ada-002"
+    # res = openai_client.embeddings.create(
+    #     input=[query_data.query], model="text-embedding-ada-002"
+    # )
+    res = openai.Embedding.create(
+        input=[query_data.query],
+        engine=embed_model
     )
-    embedding = res.data[0].embedding
+    # embedding = res.data[0].embedding
+    xq = res['data'][0]['embedding']
     # Search for matching Vectors
-    results = index.query(embedding=embedding, top_k=6, include_metadata=True, include_values=True).to_dict()
+    #results = index.query(embedding=embedding, top_k=6, include_metadata=True, include_values=True).to_dict()
+    results = index.query(vector=xq, top_k=2, include_metadata=True)
     # Filter out metadata fron search result
     context = [match["metadata"]["text"] for match in results["matches"]]
     # Retrun context
