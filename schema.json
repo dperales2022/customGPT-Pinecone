@@ -7,7 +7,7 @@
     },
     "servers": [
       {
-        "url": "RENDER-URL-HERE"
+        "url": "https://customgpt-pinecone.onrender.com"
       }
     ],
     "paths": {
