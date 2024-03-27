@@ -14,7 +14,7 @@ load_dotenv()
 app = FastAPI()
 
 # Setup environment variables
-openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+openai.api_key = os.getenv("OPENAI_API_KEY")
 pinecone_api_key = os.getenv("PINECONE_API_KEY")
 environment = os.getenv("PINECONE_ENV")
 index_name = os.getenv("PINECONE_INDEX")
@@ -26,7 +26,6 @@ index = pc.Index(index_name)
 
 # Middleware to secure HTTP endpoint
 security = HTTPBearer()
-
 
 def validate_token(
     http_auth_credentials: HTTPAuthorizationCredentials = Security(security),
@@ -42,7 +41,6 @@ def validate_token(
 class QueryModel(BaseModel):
     query: str
 
-
 @app.post("/")
 async def get_context(
     query_data: QueryModel,
@@ -50,7 +48,7 @@ async def get_context(
 ):
     embed_model = "text-embedding-ada-002"
     # convert query to embeddings
-    res = openai_client.embeddings.create(
+    res = openai.embeddings.create(
          input=[query_data.query], model="text-embedding-ada-002"
     )
     # Convert the response object to a dictionary first
